@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">WEB115 Example Library</title>
+  <desc id="description">A cream editorial card with black typography and a red WEB115 accent.</desc>
+  <rect width="1200" height="630" fill="#f5f4ef"/>
+  <path d="M72 72H1128M72 558H1128" fill="none" stroke="#d6d9d0" stroke-width="2"/>
+  <circle cx="1081" cy="119" r="47" fill="#bb462b"/>
+  <text x="72" y="130" fill="#bb462b" font-family="Menlo, monospace" font-size="24" font-weight="700" letter-spacing="3">WEB DESIGN &amp; STORYTELLING</text>
+  <text x="72" y="326" fill="#242b29" font-family="Georgia, serif" font-size="118" font-weight="700" letter-spacing="-4">The example</text>
+  <text x="72" y="445" fill="#242b29" font-family="Georgia, serif" font-size="118" font-style="italic" letter-spacing="-5">library.</text>
+  <text x="72" y="527" fill="#626963" font-family="Menlo, monospace" font-size="23" letter-spacing="2">HTML · CSS · SCROLL · MOTION · STORY</text>
+  <text x="1008" y="533" fill="#242b29" font-family="Arial, sans-serif" font-size="32" font-weight="700">WEB<tspan fill="#bb462b">115</tspan></text>
+</svg>
