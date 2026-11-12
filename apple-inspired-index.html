@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="WEB115 Web Design 課程作品與捲動敘事案例。">
+  <title>WEB115 — Design in Motion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'] },
+          boxShadow: { glass: '0 20px 80px rgba(0,0,0,.14)' }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer base {
+      html { scroll-behavior: smooth; }
+      body { @apply bg-[#f5f5f7] font-display text-[#1d1d1f] antialiased; }
+      ::selection { @apply bg-[#0071e3] text-white; }
+    }
+    @layer components {
+      .nav-link { @apply text-sm text-white/80 transition hover:text-white focus:outline-none focus:text-white; }
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+      .reveal.is-visible { opacity: 1; transform: translateY(0); }
+      .feature-card { @apply group relative overflow-hidden rounded-[2rem] bg-white p-7 sm:p-10; }
+      .learn { @apply inline-flex items-center gap-1 text-[#06c] transition hover:underline focus:outline-none focus:underline; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#content" class="absolute left-4 top-3 z-[100] -translate-y-20 rounded-full bg-white px-4 py-2 text-sm font-medium text-black transition focus:translate-y-0">跳到內容</a>
+
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#161617]/85 backdrop-blur-xl">
+    <nav class="mx-auto flex h-12 max-w-5xl items-center justify-between px-5" aria-label="主要導覽">
+      <a href="#top" class="text-lg font-semibold text-white" aria-label="WEB115 首頁">WEB<span class="text-[#2997ff]">115</span></a>
+      <div class="hidden items-center gap-7 sm:flex">
+        <a class="nav-link" href="#foundations">開始</a>
+        <a class="nav-link" href="#scroll-lab">捲動</a>
+        <a class="nav-link" href="#stories">作品</a>
+      </div>
+      <a href="index.html" class="rounded-full bg-white px-3 py-1 text-xs font-medium text-[#1d1d1f] transition hover:bg-white/85">原有圖書館</a>
+    </nav>
+  </header>
+
+  <main id="content">
+    <section id="top" class="relative min-h-[760px] overflow-hidden bg-[#000] pt-12 text-center text-white sm:min-h-[820px]">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_78%,#164f94_0%,#062350_25%,#000_65%)]"></div>
+      <div class="absolute left-1/2 top-[38%] h-[29rem] w-[29rem] -translate-x-1/2 rounded-full bg-[#2774c8]/25 blur-[105px]"></div>
+      <div class="absolute left-1/2 top-[46%] h-72 w-[22rem] -translate-x-1/2 rounded-[48%] border border-white/20 bg-gradient-to-b from-white/25 via-[#7ac1ff]/15 to-transparent shadow-[0_0_100px_rgba(48,141,255,.45)] [transform:translateX(-50%)_rotateX(58deg)]"></div>
+      <div class="relative mx-auto flex min-h-[760px] max-w-4xl flex-col items-center px-6 pt-24 sm:min-h-[820px] sm:pt-28">
+        <p class="reveal mb-4 text-sm font-medium tracking-[.22em] text-[#6bb6ff]">WEB DESIGN · 115</p>
+        <h1 class="reveal max-w-3xl text-5xl font-semibold tracking-[-.055em] sm:text-7xl">讓每一次捲動，<br>都成為一段敘事。</h1>
+        <p class="reveal mt-6 max-w-xl text-lg leading-relaxed text-white/70 sm:text-xl">從第一個 HTML 標籤，到能讓讀者停下來的互動故事。這裡是 WEB115 的實驗場。</p>
+        <div class="reveal mt-7 flex gap-6 text-lg">
+          <a class="learn text-[#2997ff]" href="#foundations">開始探索 <span aria-hidden="true">›</span></a>
+          <a class="learn text-[#2997ff]" href="scrolling-lab.html">開啟 Scroll Lab <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="absolute bottom-9 text-xs tracking-[.25em] text-white/45">SCROLL TO EXPLORE</p>
+      </div>
+    </section>
+
+    <section id="foundations" class="bg-[#f5f5f7] px-4 py-16 sm:py-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="reveal mx-auto mb-12 max-w-3xl text-center">
+          <p class="text-sm font-semibold text-[#6e6e73]">01 · FOUNDATIONS</p>
+          <h2 class="mt-3 text-4xl font-semibold tracking-[-.045em] sm:text-6xl">先掌握基礎，<br><span class="text-[#86868b]">再突破畫面。</span></h2>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <article class="feature-card reveal min-h-[430px] bg-gradient-to-br from-[#e8f5ec] to-[#bcdcc6]">
+            <p class="text-sm font-semibold text-[#56735d]">HTML · CSS</p>
+            <h3 class="mt-2 text-3xl font-semibold tracking-[-.04em]">網頁，從結構開始。</h3>
+            <p class="mt-3 max-w-sm text-[#45554a]">讀懂元素、內容區塊與樣式的關係，為每一個想法建立清楚的骨架。</p>
+            <div class="absolute bottom-[-18px] right-[-5px] grid h-64 w-72 rotate-[-8deg] grid-cols-[72px_1fr] gap-3 rounded-tl-3xl border border-[#6a9472]/30 bg-white/70 p-4 shadow-glass backdrop-blur">
+              <div class="rounded-xl bg-[#c3dfc9]"></div><div class="space-y-3 pt-2"><i class="block h-4 w-4/5 rounded-full bg-[#779b7d]"></i><i class="block h-3 w-full rounded-full bg-[#c7d7c8]"></i><i class="block h-3 w-3/4 rounded-full bg-[#c7d7c8]"></i><div class="mt-8 h-16 rounded-xl bg-[#86b38c]"></div></div>
+            </div>
+            <a class="learn absolute bottom-8 left-7 sm:left-10" href="basic.html">看 Basic HTML &amp; CSS <span aria-hidden="true">›</span></a>
+          </article>
+          <article class="feature-card reveal min-h-[430px] bg-[#f0eafa] [transition-delay:100ms]">
+            <p class="text-sm font-semibold text-[#755d99]">BOOTSTRAP</p>
+            <h3 class="mt-2 text-3xl font-semibold tracking-[-.04em]">一套規則，<br>自在地排版。</h3>
+            <p class="mt-3 max-w-sm text-[#5c5270]">運用格線與元件，練習打造能從桌面延伸到手機的回應式頁面。</p>
+            <div class="absolute bottom-2 right-5 flex h-52 w-64 items-center justify-center rounded-[2rem] bg-[#7656a7] shadow-[0_18px_35px_rgba(88,55,133,.25)]"><span class="font-serif text-8xl font-bold text-white">B</span></div>
+            <a class="learn absolute bottom-8 left-7 sm:left-10" href="bt.html">認識 Bootstrap <span aria-hidden="true">›</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="scroll-lab" class="relative overflow-hidden bg-[#050505] px-4 py-16 text-white sm:py-24">
+      <div class="absolute inset-0 opacity-50 [background-image:radial-gradient(#1f68b5_1px,transparent_1px)] [background-size:22px_22px]"></div>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
+        <div class="reveal lg:pr-8">
+          <p class="text-sm font-semibold text-[#2997ff]">02 · SCROLL LAB</p>
+          <h2 class="mt-3 text-4xl font-semibold tracking-[-.045em] sm:text-6xl">捲動，<br>不只是移動。</h2>
+          <p class="mt-5 max-w-md text-lg leading-relaxed text-white/65">把看不見的瀏覽器原理，拆成可以親手操作的七個小實驗。固定、黏附、距離、進度與水平位移，一次看懂。</p>
+          <a class="learn mt-7 text-[#2997ff]" href="scrolling-lab.html">進入完整實驗室 <span aria-hidden="true">›</span></a>
+        </div>
+        <div class="reveal relative mx-auto h-[470px] w-full max-w-xl rounded-[2.2rem] border border-white/15 bg-white/[.07] p-5 shadow-glass backdrop-blur-md [transition-delay:120ms]">
+          <div class="flex items-center gap-2 border-b border-white/10 pb-4"><i class="h-2.5 w-2.5 rounded-full bg-[#ff5f57]"></i><i class="h-2.5 w-2.5 rounded-full bg-[#febc2e]"></i><i class="h-2.5 w-2.5 rounded-full bg-[#28c840]"></i><span class="ml-2 text-xs text-white/45">scrolling-lab.html</span></div>
+          <div class="relative mt-6 h-[365px] overflow-hidden rounded-2xl bg-gradient-to-b from-[#102e55] via-[#1c6392] to-[#b1d5dd]">
+            <div class="absolute left-[12%] top-7 h-20 w-20 rounded-full bg-[#ffdc76] blur-[1px]"></div>
+            <div class="absolute bottom-0 left-[-10%] h-48 w-[125%] rounded-t-[50%] bg-[#123e43]"></div>
+            <div class="absolute bottom-8 left-[15%] h-28 w-40 rounded-t-full bg-[#1b5856]"></div><div class="absolute bottom-5 right-[8%] h-44 w-48 rounded-t-full bg-[#0b3739]"></div>
+            <div class="scroll-token absolute left-[12%] top-[58%] grid h-16 w-16 place-items-center rounded-full border border-white/70 bg-white/20 text-lg font-semibold backdrop-blur">01</div>
+            <div class="scroll-token absolute left-[40%] top-[35%] grid h-16 w-16 place-items-center rounded-full border border-white/70 bg-white/20 text-lg font-semibold backdrop-blur">02</div>
+            <div class="scroll-token absolute left-[68%] top-[53%] grid h-16 w-16 place-items-center rounded-full border border-white/70 bg-white/20 text-lg font-semibold backdrop-blur">03</div>
+            <div class="absolute bottom-4 left-5 right-5 h-1 overflow-hidden rounded-full bg-white/25"><div id="lab-progress" class="h-full w-0 rounded-full bg-white transition-[width] duration-150"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stories" class="bg-white px-4 py-16 sm:py-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="reveal mb-10 text-center sm:mb-14"><p class="text-sm font-semibold text-[#6e6e73]">03 · SCROLLYTELLING</p><h2 class="mt-3 text-4xl font-semibold tracking-[-.045em] sm:text-6xl">效果，服務於故事。</h2></div>
+        <div class="grid gap-4 lg:grid-cols-3">
+          <a href="slide-effect.html" class="feature-card reveal min-h-[440px] bg-[#edf1f9] no-underline [transition-delay:0ms]">
+            <p class="text-sm font-semibold text-[#5a6a88]">SLIDE EFFECT</p><h3 class="mt-2 text-3xl font-semibold tracking-[-.04em]">一頁一頁，<br>進入節奏。</h3><p class="mt-3 max-w-xs text-[#586275]">從手勢控制到長頁混合，保留每個版本，讀出技術選擇的差異。</p>
+            <div class="absolute bottom-0 right-0 flex h-44 w-full items-end justify-center gap-2 overflow-hidden"><i class="h-28 w-20 translate-y-6 rounded-t-xl border border-[#8d9bb3] bg-white"></i><i class="h-36 w-24 rounded-t-xl bg-[#617597] shadow-xl"></i><i class="h-24 w-20 translate-y-5 rounded-t-xl border border-[#8d9bb3] bg-white"></i></div>
+            <span class="learn absolute bottom-7 left-7 sm:left-10">體驗 Slide Effect <span aria-hidden="true">›</span></span>
+          </a>
+          <a href="ntu-journalism-student-story.html" class="feature-card reveal min-h-[440px] bg-[#f6eee1] no-underline [transition-delay:100ms]">
+            <p class="text-sm font-semibold text-[#8a6940]">DATA STORY</p><h3 class="mt-2 text-3xl font-semibold tracking-[-.04em]">100 個點，<br>100 種路徑。</h3><p class="mt-3 max-w-xs text-[#6e604e]">同一組資料點，隨敘事重新分組。看見比例，也看見變化。</p>
+            <div class="dot-field absolute bottom-0 left-0 right-0 h-44"></div><span class="learn absolute bottom-7 left-7 sm:left-10">讀資料敘事 <span aria-hidden="true">›</span></span>
+          </a>
+          <a href="parallax-scrolling-alladin/index.html" class="feature-card reveal min-h-[440px] bg-[#071b38] text-white no-underline [transition-delay:200ms]">
+            <p class="text-sm font-semibold text-[#79baff]">PARALLAX</p><h3 class="mt-2 text-3xl font-semibold tracking-[-.04em]">分層移動，<br>拉開景深。</h3><p class="mt-3 max-w-xs text-white/65">背景、中景、人物與前景，各自以不同的速度說同一個故事。</p>
+            <div class="absolute bottom-0 left-0 right-0 h-48 overflow-hidden bg-[radial-gradient(circle_at_70%_22%,#e6c47a_0_5%,transparent_6%),linear-gradient(#113e73,#071b38)]"><i class="absolute bottom-0 left-[-10%] h-28 w-[130%] rounded-t-[50%] bg-[#102a3d]"></i><i class="absolute bottom-0 right-[17%] h-40 w-16 rotate-[30deg] rounded-full bg-[#ca8d3d]"></i></div><span class="learn absolute bottom-7 left-7 text-[#2997ff] sm:left-10">飛進視差故事 <span aria-hidden="true">›</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden bg-[#f5f5f7] px-4 py-20 text-center sm:py-28">
+      <div class="reveal mx-auto max-w-3xl"><p class="text-sm font-semibold text-[#6e6e73]">KEEP MAKING</p><h2 class="mt-3 text-4xl font-semibold tracking-[-.05em] sm:text-6xl">讀程式。改一點。<br>看看會發生什麼。</h2><p class="mx-auto mt-5 max-w-xl text-lg text-[#6e6e73]">所有範例都在這個資料夾裡，從一個小改動開始，做出屬於自己的下一幕。</p><a href="index.html" class="mt-8 inline-flex rounded-full bg-[#0071e3] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#0077ed] focus:outline-none focus:ring-4 focus:ring-[#0071e3]/30">瀏覽全部範例</a></div>
+    </section>
+  </main>
+
+  <footer class="bg-[#1d1d1f] px-5 py-7 text-center text-xs text-white/45">WEB115 · Web Design &amp; Storytelling · Built to be explored.</footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+    }), { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
+
+    const lab = document.querySelector('#scroll-lab');
+    const progress = document.querySelector('#lab-progress');
+    const tokens = document.querySelectorAll('.scroll-token');
+    function updateLab() {
+      const rect = lab.getBoundingClientRect();
+      const amount = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+      progress.style.width = `${amount * 100}%`;
+      tokens.forEach((token, index) => {
+        const drift = (amount - .5) * (index % 2 ? -50 : 50);
+        token.style.transform = `translateY(${drift}px) scale(${.86 + amount * .18})`;
+      });
+    }
+    window.addEventListener('scroll', updateLab, { passive: true });
+    updateLab();
+
+    const dotField = document.querySelector('.dot-field');
+    if (dotField) {
+      for (let i = 0; i < 64; i++) {
+        const dot = document.createElement('i');
+        dot.style.cssText = `position:absolute;width:7px;height:7px;border-radius:999px;background:${i % 3 === 0 ? '#d09954' : '#8e6a40'};left:${8 + (i % 10) * 9.4}%;top:${12 + Math.floor(i / 10) * 18}%;opacity:${.35 + (i % 4) * .16}`;
+        dotField.appendChild(dot);
+      }
+    }
+  </script>
+</body>
+</html>

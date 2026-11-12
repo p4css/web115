@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sticky video｜jQuery 最簡版</title>
+<style>
+  body { margin: 0; font-family: "Helvetica Neue", Helvetica, "Noto Sans TC", sans-serif; font-weight: 300; }
+
+  .leading, .ending { height: 100vh; text-align: center; padding-top: 40vh; box-sizing: border-box; }
+
+  /* 每段影片一個 .step，高度 200vh：多出來的 100vh 就是影片「黏住」的捲動距離 */
+  .step { height: 200vh; background: #000; }
+
+  /* 影片碰到視窗上緣 (top: 0) 就黏住，直到 .step 捲完才被帶走 */
+  .sticky { position: sticky; top: 0; height: 100vh; }
+  .sticky video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* 疊在影片上的文字 */
+  .caption { position: absolute; left: 0; right: 0; bottom: 56px; margin: 0;
+             text-align: center; font-size: 21px; line-height: 33.6px; color: #d3ce94; }
+
+  /* 右側：目前是第幾段 */
+  #sign { position: fixed; right: 20px; top: 50%; color: #fff; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<section class="leading">
+  <h1>Lorem ipsum dolor</h1>
+  <p>往下捲動 ↓</p>
+</section>
+
+<!-- 影片檔名放在 data-src，<video> 一開始沒有 src，所以還不會下載 -->
+<section class="step" data-src="wapo-border-crossing-video1.mp4">
+  <div class="sticky">
+    <video muted playsinline></video>
+    <p class="caption">Lorem ipsum dolor sit amet consectetur</p>
+  </div>
+</section>
+
+<section class="step" data-src="wapo-border-crossing-video2.mp4">
+  <div class="sticky">
+    <video muted playsinline></video>
+    <p class="caption">Sed do eiusmod tempor incididunt ut labore</p>
+  </div>
+</section>
+
+<section class="step" data-src="57fb0043e4b037a240c7b2ad_1439399835595-cf9g26_t_1476067421749_1280_720_2000.mp4">
+  <div class="sticky">
+    <video muted playsinline></video>
+    <p class="caption">Ut enim ad minim veniam quis nostrud</p>
+  </div>
+</section>
+
+<section class="step" data-src="57fb007fe4b037a240c7b2bf_1439399835595-cf9g26_t_1476067480371_1280_720_2000.mp4">
+  <div class="sticky">
+    <video muted playsinline></video>
+    <p class="caption">Duis aute irure dolor in reprehenderit</p>
+  </div>
+</section>
+
+<section class="ending">
+  <h1>Finis</h1>
+</section>
+
+<div id="sign"></div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function () {
+  var $steps = $('.step');
+
+  $(window).on('scroll', function () {
+    // 視窗中線在整份文件裡的位置
+    var middle = $(window).scrollTop() + $(window).height() / 2;
+    var sign = '';
+
+    $steps.each(function (i) {
+      var $step  = $(this);
+      var top    = $step.offset().top;             // 這一段的上緣
+      var bottom = top + $step.outerHeight();      // 這一段的下緣
+      var video  = $step.find('video').get(0);     // 取出原生的 <video> 元素
+
+      if (middle >= top && middle < bottom) {
+        // 中線落在這一段裡：第一次到這裡才把影片嵌進來，然後播放
+        if (!$(video).attr('src')) {
+          $(video).attr('src', $step.data('src'));
+        }
+        if (video.paused) {
+          video.play();
+        }
+        sign = (i + 1) + ' / ' + $steps.length;
+      } else if (!video.paused) {
+        // 中線離開這一段：暫停
+        video.pause();
+      }
+    });
+
+    $('#sign').text(sign);
+  });
+
+  $(window).trigger('scroll');   // 載入時先算一次
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll-triggered video story｜練習範例</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --paper: #fafaf7;
+    --caption: #d3ce94;          /* 字幕的淡黃色 */
+    --fade: .5s;                 /* 轉場時間 */
+    --sans: "Helvetica Neue", Helvetica, "Noto Sans TC", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: var(--sans); font-weight: 300; color: var(--ink); background: #000; }
+
+  /* ── 1. 固定在視窗後方的影片舞台 ─────────────────────────── */
+  .background { position: fixed; inset: 0; z-index: 0; background: #000; }
+  .panel      { position: absolute; inset: 0; display: none; }   /* 每個 block 對應一個 panel */
+  .panel.is-active { display: block; }
+  .panel video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* 轉場用的黑幕：切換影片時先變黑，再淡出 */
+  .screen { position: fixed; inset: 0; z-index: 1; background: #000; opacity: 0;
+            pointer-events: none; transition: opacity var(--fade) ease; }
+  .screen.is-on { opacity: 1; }
+
+  /* ── 2. 捲動的內容（透明，只負責撐出高度與觸發） ─────────── */
+  article { position: relative; z-index: 2; }
+  .block  { height: 110vh; }                       /* 每段影片一個 block，略高於一個視窗 */
+
+  .leading, .ending {
+    height: 100vh; background: var(--paper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0 24px;
+  }
+  .leading h1 { font-size: clamp(44px, 5.6vw, 84px); line-height: 1.1; font-weight: 500;
+                letter-spacing: .01em; margin: 0 0 20px; max-width: 14em; }
+  .leading h2, .ending h2 { font-size: 28px; line-height: 1.1; font-weight: 500;
+                letter-spacing: .08em; margin: 0 0 28px; }
+  .leading p, .ending p { font-size: 21px; line-height: 1.6; max-width: 34em; margin: 0; }
+  .hint { margin-top: 48px !important; font-size: 14px !important; letter-spacing: .08em; opacity: .6; }
+
+  /* ── 3. 疊在影片上的文字（字幕） ─────────────────────────── */
+  .transcript-wrap {
+    position: fixed; left: 50%; bottom: 56px; transform: translateX(-50%);
+    width: min(800px, 100vw); padding: 0 24px; z-index: 3;
+    text-align: center; font-size: 21px; line-height: 33.6px;
+    opacity: 0; transition: opacity .3s; pointer-events: none;
+  }
+  .transcript-wrap.is-on { opacity: 1; }
+  .transcript { color: var(--caption); background: #000; padding: 3px 8px;
+                -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .transcript .speaker { font-size: 16.8px; font-weight: 500; margin-right: .5em; }
+  .transcript .title   { font-size: 16.8px; margin-right: .6em; opacity: .85; }
+
+  /* 影片播完後提示繼續往下捲 */
+  .continue { position: fixed; left: 0; right: 0; bottom: 18px; z-index: 3; text-align: center;
+              font-size: 14px; letter-spacing: .08em; color: var(--caption);
+              opacity: 0; transition: opacity .4s; pointer-events: none; }
+  .continue.is-on { opacity: 1; animation: nudge 1.4s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateY(5px); } }
+
+  /* ── 4. 右側的段落指示 ───────────────────────────────────── */
+  .progress { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 4;
+              display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+              opacity: 0; transition: opacity .4s; }
+  .progress.is-on { opacity: 1; }
+  .progress button { all: unset; cursor: pointer; display: flex; align-items: center; gap: 8px;
+                     color: #fff; font-size: 12px; letter-spacing: .06em; }
+  .progress .num { opacity: 0; transition: opacity .3s; text-shadow: 0 0 4px #000; }
+  .progress .bar { position: relative; width: 3px; height: 44px; background: rgba(255,255,255,.35);
+                   border-radius: 2px; overflow: hidden; }
+  .progress .bar i { position: absolute; left: 0; top: 0; width: 100%; height: 0; background: #fff; }
+  .progress .is-done .bar i { height: 100%; }
+  .progress .is-current .num, .progress button:hover .num, .progress button:focus-visible .num { opacity: 1; }
+  .progress button:focus-visible .bar { outline: 2px solid var(--caption); outline-offset: 2px; }
+
+  /* 聲音開關 */
+  .sound { position: fixed; right: 16px; top: 16px; z-index: 4; font: inherit; font-size: 13px;
+           letter-spacing: .06em; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+           color: #fff; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.5);
+           opacity: 0; transition: opacity .4s; }
+  .sound.is-on { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .transcript-wrap { font-size: 17px; line-height: 27px; bottom: 48px; }
+    .progress { right: 10px; } .progress .bar { height: 30px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root { --fade: 0s; } .continue.is-on { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 固定背景：panel 一開始是空的，捲到對應的 block 才把 <video> 塞進來 -->
+<div class="background" id="background" aria-hidden="true"></div>
+<div class="screen" id="screen"></div>
+
+<article>
+  <section class="leading">
+    <h2>LOREM IPSUM</h2>
+    <h1>Dolor sit amet consectetur</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p class="hint">往下捲動開始 ↓</p>
+  </section>
+
+  <!-- 每個 .block 就是一段影片。data-src 是影片檔，data-loop 表示循環播放 -->
+  <div class="block" data-src="wapo-border-crossing-video1.mp4" data-loop="true"
+       data-speaker="LOREM" data-title="Ipsum dolor"></div>
+  <div class="block" data-src="wapo-border-crossing-video2.mp4"
+       data-speaker="AMET" data-title="Consectetur elit"></div>
+  <div class="block" data-src="57fb0043e4b037a240c7b2ad_1439399835595-cf9g26_t_1476067421749_1280_720_2000.mp4"
+       data-speaker="TEMPOR" data-title="Incididunt labore"></div>
+  <div class="block" data-src="57fb007fe4b037a240c7b2bf_1439399835595-cf9g26_t_1476067480371_1280_720_2000.mp4"
+       data-speaker="MAGNA" data-title="Aliqua enim"></div>
+
+  <section class="ending">
+    <h2>FINIS</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+  </section>
+</article>
+
+<div class="transcript-wrap" id="transcriptWrap" aria-live="off">
+  <span class="transcript" id="transcript"></span>
+</div>
+<p class="continue" id="continue">繼續往下捲動 ↓</p>
+<nav class="progress" id="progress" aria-label="影片段落"></nav>
+<button class="sound" id="sound" type="button" aria-pressed="false">🔇 開啟聲音</button>
+
+<script>
+(() => {
+  const FADE = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 500;   // 與 CSS --fade 一致
+  const KEEP = 1;          // 只保留「目前」與前後 KEEP 段的 <video>，其餘移除
+  const CUE_SECONDS = 3.5; // 每句假字幕停留的秒數
+
+  const blocks  = [...document.querySelectorAll('.block')];
+  const bg      = document.getElementById('background');
+  const screen  = document.getElementById('screen');
+  const wrap    = document.getElementById('transcriptWrap');
+  const caption = document.getElementById('transcript');
+  const cont    = document.getElementById('continue');
+  const nav     = document.getElementById('progress');
+  const soundBtn = document.getElementById('sound');
+
+  // 假字幕（亂碼文字）
+  const LOREM = ('Lorem ipsum dolor sit amet consectetur adipiscing elit|Sed do eiusmod tempor incididunt ut labore|' +
+    'Et dolore magna aliqua ut enim ad minim veniam|Quis nostrud exercitation ullamco laboris|' +
+    'Nisi ut aliquip ex ea commodo consequat|Duis aute irure dolor in reprehenderit|' +
+    'In voluptate velit esse cillum dolore|Eu fugiat nulla pariatur excepteur sint|' +
+    'Occaecat cupidatat non proident sunt in culpa|Qui officia deserunt mollit anim id est laborum').split('|');
+
+  // 為每個 block 建立一個空的 panel 與一個右側指示
+  const panels = blocks.map((b, i) => {
+    const p = document.createElement('div');
+    p.className = 'panel'; p.id = 'media-panel-' + i;
+    bg.appendChild(p);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', `第 ${i + 1} 段，共 ${blocks.length} 段`);
+    btn.innerHTML = `<span class="num">${i + 1} / ${blocks.length}</span><span class="bar"><i></i></span>`;
+    btn.addEventListener('click', () => b.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    nav.appendChild(btn);
+    return p;
+  });
+  const dots = [...nav.children];
+
+  let current = -1;        // 目前播放的段落；-1 表示在 leading / ending
+  let wantSound = false;
+  let swapTimer = null;
+
+  // ── 捲到附近才嵌入影片 ────────────────────────────────────
+  function embed(i) {
+    if (i < 0 || i >= blocks.length || panels[i].firstChild) return;
+    const v = document.createElement('video');
+    v.src = blocks[i].dataset.src;
+    v.preload = 'auto';
+    v.playsInline = true;
+    v.muted = true;
+    v.loop = blocks[i].dataset.loop === 'true';
+    v.addEventListener('timeupdate', () => { if (i === current) tick(v, i); });
+    v.addEventListener('ended', () => { if (i === current) cont.classList.add('is-on'); });
+    panels[i].appendChild(v);
+  }
+  function unembedFarFrom(i) {
+    panels.forEach((p, j) => {
+      if (Math.abs(j - i) > KEEP && p.firstChild) {
+        p.firstChild.pause(); p.firstChild.removeAttribute('src'); p.firstChild.load();
+        p.replaceChildren();
+      }
+    });
+  }
+
+  // ── 字幕與右側進度 ────────────────────────────────────────
+  function tick(v, i) {
+    const b = blocks[i];
+    const line = LOREM[(i * 3 + Math.floor(v.currentTime / CUE_SECONDS)) % LOREM.length];
+    const html = `<span class="speaker">${b.dataset.speaker}</span><span class="title">${b.dataset.title}</span>${line}`;
+    if (caption.innerHTML !== html) caption.innerHTML = html;
+    const ratio = v.duration ? v.currentTime / v.duration : 0;
+    dots[i].querySelector('i').style.height = (ratio * 100) + '%';
+  }
+
+  function play(v) {
+    v.muted = !wantSound;
+    const p = v.play();
+    if (p) p.catch(() => { v.muted = true; v.play().catch(() => {}); });   // 瀏覽器擋有聲自動播放時，退回靜音
+  }
+
+  // ── 切換段落：黑幕淡入 → 換影片 → 黑幕淡出 ────────────────
+  function goTo(i) {
+    if (i === current) return;
+    const prev = current;
+    current = i;
+    clearTimeout(swapTimer);
+    cont.classList.remove('is-on');
+    wrap.classList.remove('is-on');
+
+    const inStory = i >= 0;
+    nav.classList.toggle('is-on', inStory);
+    soundBtn.classList.toggle('is-on', inStory);
+    dots.forEach((d, j) => {
+      d.classList.toggle('is-current', j === i);
+      d.classList.toggle('is-done', inStory && j < i);
+      if (j !== i) d.querySelector('i').style.height = '';
+    });
+
+    if (inStory) { embed(i); embed(i + 1); }     // 嵌入目前這段，並預先載入下一段
+
+    screen.classList.add('is-on');
+    swapTimer = setTimeout(() => {
+      if (prev >= 0 && panels[prev].firstChild) panels[prev].firstChild.pause();
+      panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
+      if (inStory) {
+        const v = panels[i].firstChild;
+        v.currentTime = 0;
+        play(v);
+        tick(v, i);
+        wrap.classList.add('is-on');
+        unembedFarFrom(i);
+        screen.classList.remove('is-on');
+      }
+    }, FADE);
+  }
+
+  // ── 判斷目前捲到哪個 block（以視窗中線為準） ──────────────
+  function onScroll() {
+    const mid = innerHeight / 2;
+    let idx = -1;
+    blocks.forEach((b, i) => {
+      const r = b.getBoundingClientRect();
+      if (r.top <= mid && r.bottom > mid) idx = i;
+    });
+    goTo(idx);
+  }
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; onScroll(); });
+  }, { passive: true });
+  addEventListener('resize', onScroll);
+
+  soundBtn.addEventListener('click', () => {
+    wantSound = !wantSound;
+    soundBtn.setAttribute('aria-pressed', String(wantSound));
+    soundBtn.textContent = wantSound ? '🔊 關閉聲音' : '🔇 開啟聲音';
+    const v = current >= 0 && panels[current].firstChild;
+    if (v) v.muted = !wantSound;
+  });
+
+  embed(0);      // 第一段先載入，離開 leading 時才不會等
+  onScroll();
+})();
+</script>
+</body>
+</html>
