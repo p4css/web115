@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>冰上的 3.56 秒｜Yuna Kim 動作解析</title>
+<meta name="description" content="以逐幀影像拆解 Yuna Kim 三連跳的滑行、起跳、旋轉與落冰。">
+<link rel="canonical" href="https://p4css.github.io/web115/yuna-kim/yunakim.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WEB115 Example Library">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="冰上的 3.56 秒｜Yuna Kim 動作解析">
+<meta property="og:description" content="以逐幀影像拆解 Yuna Kim 三連跳的滑行、起跳、旋轉與落冰。">
+<meta property="og:url" content="https://p4css.github.io/web115/yuna-kim/yunakim.html">
+<meta property="og:image" content="https://p4css.github.io/web115/og-web115.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="WEB115 Example Library">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="冰上的 3.56 秒｜Yuna Kim 動作解析">
+<meta name="twitter:description" content="以逐幀影像拆解 Yuna Kim 三連跳的滑行、起跳、旋轉與落冰。">
+<meta name="twitter:image" content="https://p4css.github.io/web115/og-web115.png">
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap");
+
+    :root {
+      --ink: #07141d;
+      --deep: #061722;
+      --ice: #eaf5f7;
+      --frost: #f7fbfb;
+      --blue: #65cbe5;
+      --line: rgba(152, 218, 232, .35);
+      --muted: #91a7b0;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ice);
+      background: var(--deep);
+      font-family: "Noto Sans TC", sans-serif;
+      overflow-x: clip;
+    }
+    img, video { display: block; max-width: 100%; }
+    a { color: inherit; }
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--blue);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+    .serif { font-family: "Playfair Display", serif; }
+
+    #story-hero {
+      position: relative;
+      height: 100svh;
+      min-height: 620px;
+      overflow: hidden;
+      isolation: isolate;
+      background: #02090d;
+    }
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 52% 50%;
+      filter: saturate(.62) contrast(1.08) brightness(.68);
+    }
+    #story-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(3, 15, 23, .82) 0%, rgba(3, 15, 23, .18) 60%),
+        linear-gradient(0deg, rgba(3, 15, 23, .9) 0%, transparent 46%);
+      pointer-events: none;
+    }
+    .hero-copy {
+      position: absolute;
+      z-index: 2;
+      left: clamp(1.5rem, 7vw, 7rem);
+      bottom: clamp(4rem, 10vh, 8rem);
+      max-width: 770px;
+    }
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(3.2rem, 8.6vw, 8.6rem);
+      font-weight: 600;
+      letter-spacing: -.055em;
+      line-height: .82;
+      text-shadow: 0 14px 50px rgba(0, 0, 0, .35);
+    }
+    .hero-copy h1 em {
+      display: block;
+      margin-left: clamp(2rem, 9vw, 10rem);
+      color: var(--blue);
+      font-weight: 600;
+    }
+    .hero-deck {
+      max-width: 30rem;
+      margin: 2rem 0 0 clamp(2rem, 9vw, 10rem);
+      color: rgba(234, 245, 247, .82);
+      font-size: clamp(.95rem, 1.4vw, 1.2rem);
+      line-height: 1.8;
+    }
+    .scroll-cue {
+      position: absolute;
+      z-index: 2;
+      right: clamp(1.4rem, 4vw, 4rem);
+      bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      color: rgba(234, 245, 247, .68);
+      font-size: .68rem;
+      letter-spacing: .22em;
+      writing-mode: vertical-rl;
+    }
+    .scroll-cue::after { content: ""; width: 1px; height: 64px; background: var(--blue); }
+
+    #motion-breakdown { position: relative; background: var(--frost); color: var(--ink); }
+    .motion-layout { display: grid; grid-template-columns: 50vw 1fr; align-items: start; }
+    .motion-stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(175deg, transparent 0 34px, rgba(101, 203, 229, .14) 35px 36px),
+        #dcebed;
+    }
+    .motion-stage::before {
+      content: "SCROLL / FRAME 001—125";
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      z-index: 2;
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+    }
+    .motion-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+    .motion-video--ghost {
+      z-index: 0;
+      opacity: .17;
+      transform: scale(3.25);
+      transform-origin: 50% 54%;
+      filter: saturate(.55) contrast(.82);
+    }
+    .motion-video--primary { z-index: 1; }
+    .motion-progress {
+      position: absolute;
+      z-index: 2;
+      inset: auto 2rem 2rem;
+      height: 2px;
+      background: rgba(7, 20, 29, .18);
+    }
+    .motion-progress span { display: block; width: 0; height: 100%; background: var(--ink); }
+    .motion-copy { padding: 30vh clamp(2rem, 7vw, 7rem) 28vh; }
+    .motion-step {
+      min-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 33rem;
+      opacity: .28;
+      transform: translateY(1.5rem);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .motion-step.is-active { opacity: 1; transform: none; }
+    .step-number {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: #397b8c;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+    }
+    .step-number::after { content: ""; width: 4rem; height: 1px; background: currentColor; }
+    .motion-step h2 { margin: 1.5rem 0 1rem; font-size: clamp(2.4rem, 5vw, 5.4rem); line-height: .96; letter-spacing: -.04em; }
+    .motion-step p { margin: 0; color: #42545c; font-size: clamp(1rem, 1.35vw, 1.18rem); line-height: 2; }
+    .datum { margin-top: 1.8rem; font-family: "Playfair Display", serif; font-size: 1.05rem; color: #397b8c; }
+
+    .chapter-buffer {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 5rem 7vw;
+      position: relative;
+      overflow: hidden;
+      background: var(--deep);
+    }
+    .chapter-buffer::before {
+      content: attr(data-index);
+      position: absolute;
+      left: -1vw;
+      top: 48%;
+      translate: 0 -50%;
+      color: rgba(101, 203, 229, .07);
+      font: 600 clamp(15rem, 38vw, 38rem)/.7 "Playfair Display", serif;
+    }
+    .buffer-copy { position: relative; width: min(720px, 100%); }
+    .buffer-copy h2 { margin: 0 0 1.5rem; font: 600 clamp(3rem, 7vw, 7rem)/.96 "Playfair Display", serif; letter-spacing: -.04em; }
+    .buffer-copy p { max-width: 35rem; margin: 0 0 0 auto; color: #a9bec5; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 2; }
+
+    #movement-sequence { position: relative; background: #dfecef; color: var(--ink); }
+    .sequence-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+    .sequence-heading {
+      position: absolute;
+      top: clamp(1.5rem, 5vh, 4rem);
+      left: clamp(1.5rem, 6vw, 6rem);
+      z-index: 2;
+      margin: 0;
+      font-size: clamp(1.5rem, 3.2vw, 3.5rem);
+      letter-spacing: -.035em;
+    }
+    .sequence-heading small { display: block; margin-bottom: .5rem; color: #397b8c; font-size: .66rem; letter-spacing: .22em; text-transform: uppercase; }
+    .sequence-notes {
+      position: absolute;
+      top: clamp(1.5rem, 5vh, 4rem);
+      right: clamp(1.5rem, 6vw, 6rem);
+      z-index: 3;
+      display: grid;
+      width: min(31rem, 38vw);
+      min-height: 7.5rem;
+      padding-left: 1.3rem;
+      border-left: 2px solid #397b8c;
+    }
+    .sequence-note {
+      grid-area: 1 / 1;
+      align-self: start;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(.75rem);
+      transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
+    }
+    .sequence-note.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition-delay: 0s;
+    }
+    .sequence-note span { color: #397b8c; font: 600 .72rem/1 "Playfair Display", serif; letter-spacing: .1em; }
+    .sequence-note h3 { margin: .5rem 0 .4rem; font-size: clamp(1.2rem, 2vw, 1.8rem); line-height: 1.15; }
+    .sequence-note p { margin: 0; color: #42545c; font-size: clamp(.8rem, 1.05vw, .98rem); line-height: 1.7; }
+    .sequence-track {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      will-change: transform;
+    }
+    .sequence-track img {
+      width: max(620vw, 4000px);
+      max-width: none;
+      margin-top: 8vh;
+      filter: contrast(1.02);
+    }
+    .sequence-counter {
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      font: 600 1rem/1 "Playfair Display", serif;
+    }
+
+    #jump-anatomy { padding: clamp(5rem, 12vw, 12rem) 5vw; background: #f3f7f7; color: var(--ink); }
+    .anatomy-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin: 0 auto 4rem; max-width: 1500px; }
+    .anatomy-heading h2 { margin: 0; font-size: clamp(3.2rem, 7vw, 8rem); line-height: .86; letter-spacing: -.055em; }
+    .anatomy-heading p { max-width: 34rem; margin: 0; color: #4c5e65; line-height: 2; }
+    .anatomy-figure { margin: 0 auto; max-width: 1600px; }
+    .anatomy-figure img { width: 100%; border: 1px solid rgba(7, 20, 29, .08); }
+    .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 1px; background: rgba(7, 20, 29, .16); }
+    .phase-card { padding: clamp(1.5rem, 3vw, 3rem); background: #f3f7f7; }
+    .phase-card span { color: #397b8c; font: 600 1rem "Playfair Display", serif; }
+    .phase-card h3 { margin: .9rem 0 .75rem; font-size: clamp(1.25rem, 2vw, 2rem); }
+    .phase-card p { margin: 0; color: #52656c; line-height: 1.8; }
+
+    #story-footer {
+      min-height: 68vh;
+      display: grid;
+      align-content: space-between;
+      padding: clamp(4rem, 8vw, 8rem) 6vw 3rem;
+      background: #040d12;
+      border-top: 1px solid rgba(101, 203, 229, .18);
+    }
+    .footer-quote { max-width: 1000px; margin: 0; font: italic 600 clamp(2.5rem, 6.5vw, 7rem)/1.04 "Playfair Display", serif; letter-spacing: -.035em; }
+    .footer-quote em { color: var(--blue); }
+    .footer-meta { display: flex; justify-content: space-between; gap: 2rem; padding-top: 5rem; color: var(--muted); font-size: .76rem; line-height: 1.7; }
+
+    @media (max-width: 760px) {
+      .hero-copy h1 em, .hero-deck { margin-left: 0; }
+      .motion-layout { grid-template-columns: 1fr; }
+      .motion-stage { z-index: 3; height: 48svh; }
+      .motion-video--ghost { opacity: .14; transform: scale(2.55); }
+      .motion-copy { padding: 0 1.5rem 18vh; }
+      .motion-step { min-height: 100svh; padding-top: 48svh; justify-content: center; }
+      .sequence-notes {
+        top: 7.5rem;
+        left: 1.5rem;
+        right: 1.5rem;
+        width: auto;
+        min-height: 8rem;
+      }
+      .sequence-note h3 { font-size: 1.15rem; }
+      .sequence-note p { font-size: .8rem; line-height: 1.6; }
+      .anatomy-heading { grid-template-columns: 1fr; gap: 2rem; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .footer-meta { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .motion-step { transition: none; }
+      .scroll-cue { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header id="story-hero" aria-label="Yuna Kim 滑冰動作解析開場">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-label="Yuna Kim 三連跳骨架分析影片">
+      <source src="outputs/yuna_kim_1m49-1m54_pose.webm" type="video/webm">
+      <source src="outputs/yuna_kim_1m49-1m54_pose.mp4" type="video/mp4">
+    </video>
+    <div class="hero-copy">
+      <p class="eyebrow">Yuna Kim · Vancouver 2010 · Motion Study</p>
+      <h1 class="serif">冰上的<em>3.56 秒</em></h1>
+      <p class="hero-deck">速度、力量與控制，濃縮在三次離冰之間。向下捲動，逐幀看見 Yuna Kim 如何完成一組流動的三連跳。</p>
+    </div>
+    <div class="scroll-cue" aria-hidden="true">SCROLL TO STUDY</div>
+  </header>
+
+  <main>
+    <section id="motion-breakdown" aria-label="捲軸控制的動作分解">
+      <div class="motion-layout">
+        <div class="motion-stage">
+          <video class="motion-video motion-video--ghost scrub-video" muted playsinline preload="auto" aria-hidden="true">
+            <source src="outputs/yuna_kim_1m49-1m54_white.webm" type="video/webm">
+            <source src="outputs/yuna_kim_1m49-1m54_white.mp4" type="video/mp4">
+          </video>
+          <video id="scrub-video" class="motion-video motion-video--primary scrub-video" muted playsinline preload="auto" aria-label="Yuna Kim 去背動作影片">
+            <source src="outputs/yuna_kim_1m49-1m54_white.webm" type="video/webm">
+            <source src="outputs/yuna_kim_1m49-1m54_white.mp4" type="video/mp4">
+          </video>
+          <div class="motion-progress" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="motion-copy">
+          <article class="motion-step is-active" data-time="0.25">
+            <span class="step-number">01 / APPROACH</span>
+            <h2 class="serif">先讓速度<br>成為力量</h2>
+            <p>右腳單足滑行，髖部逐漸升高。她沒有急著向上跳，而是先讓水平速度保持完整，為第一跳累積穩定的進入條件。</p>
+            <div class="datum">00.00—00.28 sec</div>
+          </article>
+          <article class="motion-step" data-time="1.05">
+            <span class="step-number">02 / JUMP I</span>
+            <h2 class="serif">最高，<br>也最從容</h2>
+            <p>起跳前右膝彎曲至約 70°，接著迅速伸展。第一跳滯空 0.56 秒，是整組動作中高度與時間最充裕的一跳。</p>
+            <div class="datum">00.32—00.88 sec · Air 0.56 sec</div>
+          </article>
+          <article class="motion-step" data-time="2.05">
+            <span class="step-number">03 / TRANSITION</span>
+            <h2 class="serif">落冰不是<br>句點</h2>
+            <p>右腳落冰，左腿向後延伸，雙臂打開。膝部吸收衝擊的同時，身體仍維持向前流動，把落冰直接轉成下一次起跳的準備。</p>
+            <div class="datum">00.92—01.64 sec · Link 0.72 sec</div>
+          </article>
+          <article class="motion-step" data-time="3.15">
+            <span class="step-number">04 / JUMP II—III</span>
+            <h2 class="serif">壓縮時間，<br>連續起飛</h2>
+            <p>第二跳同樣滯空 0.56 秒；落冰後的銜接縮短到 0.32 秒，雙膝壓至約 100°，把吸收的力量立刻送進第三跳。</p>
+            <div class="datum">01.68—03.16 sec · Air 0.56 / 0.52 sec</div>
+          </article>
+          <article class="motion-step" data-time="4.65">
+            <span class="step-number">05 / EXIT</span>
+            <h2 class="serif">把旋轉，<br>重新拉成線</h2>
+            <p>第三跳落冰後，右膝逐漸伸展，雙臂展開。緊湊的垂直旋轉被還原為平穩的水平滑行——動作結束，速度仍在。</p>
+            <div class="datum">03.20—05.00 sec · Glide out</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-buffer" data-index="01" aria-labelledby="sequence-intro-title">
+      <div class="buffer-copy">
+        <p class="eyebrow">One movement, many instants</p>
+        <h2 id="sequence-intro-title">時間不是一格，<br>而是一條軌跡。</h2>
+        <p>把 125 個影格沿著滑行方向攤開，原本一閃而過的重心轉移、肢體收束與落冰姿態，開始留下可閱讀的節奏。</p>
+      </div>
+    </section>
+
+    <section id="movement-sequence" aria-label="三連跳連續動作橫向捲軸">
+      <div class="sequence-sticky">
+        <h2 class="sequence-heading"><small>Frame by frame · Scroll horizontally</small>三連跳的時間長卷</h2>
+        <div class="sequence-notes" aria-live="polite">
+          <article class="sequence-note is-active" data-start="0" aria-hidden="false">
+            <span>01 · 1:49.00—1:49.28</span>
+            <h3>助滑：讓速度進入刀刃</h3>
+            <p>右腳單足滑行，身體保持延伸；此刻累積的水平速度，是整組連跳的能量起點。</p>
+          </article>
+          <article class="sequence-note" data-start="0.07" aria-hidden="true">
+            <span>02 · AIR 0.56 SEC</span>
+            <h3>第一跳：最高，也最從容</h3>
+            <p>右膝壓低後迅速伸展，四肢向旋轉軸收束，取得三次跳躍中最充裕的高度。</p>
+          </article>
+          <article class="sequence-note" data-start="0.18" aria-hidden="true">
+            <span>03 · LINK 0.72 SEC</span>
+            <h3>第一次落冰：把衝擊變成延伸</h3>
+            <p>右腳承重、左腿後伸，雙臂打開穩住軸線；落冰仍保留向前流動的速度。</p>
+          </article>
+          <article class="sequence-note" data-start="0.34" aria-hidden="true">
+            <span>04 · AIR 0.56 SEC</span>
+            <h3>第二跳：在滑行中再次起飛</h3>
+            <p>腳踝在起跳前降到最低點，隨後快速離冰；滯空時間與第一跳同為 0.56 秒。</p>
+          </article>
+          <article class="sequence-note" data-start="0.46" aria-hidden="true">
+            <span>05 · LINK 0.32 / AIR 0.52 SEC</span>
+            <h3>第三跳：用最短銜接補回高度</h3>
+            <p>雙膝深壓至約 100°，只用 0.32 秒完成轉換，把落冰力量立刻送進第三跳。</p>
+          </article>
+          <article class="sequence-note" data-start="0.64" aria-hidden="true">
+            <span>06 · EXIT 1.80 SEC</span>
+            <h3>滑出：把旋轉重新展成直線</h3>
+            <p>右膝逐漸伸展、雙臂重新打開；緊縮的旋轉動量被釋放成安定而持續的滑行。</p>
+          </article>
+        </div>
+        <div class="sequence-track">
+          <img src="outputs/yuna_kim_1m49-1m54_strobe_x2.png" alt="Yuna Kim 三連跳由左至右的連續動作影像" loading="lazy">
+        </div>
+        <div class="sequence-counter" aria-hidden="true"><span>00</span> / 100</div>
+      </div>
+    </section>
+
+    <section class="chapter-buffer" data-index="02" aria-labelledby="anatomy-intro-title">
+      <div class="buffer-copy">
+        <p class="eyebrow">Anatomy of a jump</p>
+        <h2 id="anatomy-intro-title">躍起之前，<br>先學會向下。</h2>
+        <p>花式滑冰的跳躍不只是離開冰面。真正的技術藏在壓低、延伸、收緊與再次打開的連鎖反應裡。</p>
+      </div>
+    </section>
+
+    <section id="jump-anatomy" aria-labelledby="anatomy-title">
+      <div class="anatomy-heading">
+        <h2 id="anatomy-title" class="serif">一次跳躍，<br>四種方向。</h2>
+        <p>腿部向下壓、刀刃向前滑、身體向上延伸、四肢向內收束。看似向上的跳躍，其實同時管理著上下、前後與旋轉三種動量。</p>
+      </div>
+      <figure class="anatomy-figure">
+        <img src="outputs/yuna_kim_1m49-1m54_jump_still.png" alt="Yuna Kim 三連跳起跳、空中旋轉、落冰與滑出的重疊影像" loading="lazy">
+        <figcaption class="phase-grid">
+          <div class="phase-card"><span>01</span><h3>壓低與起跳</h3><p>膝與踝先下沉，再快速伸展。水平滑行的速度，在刀刃離冰的一刻被導向上方。</p></div>
+          <div class="phase-card"><span>02</span><h3>收緊與旋轉</h3><p>手臂與腿靠近旋轉軸，降低轉動慣量；空中的半透明殘影，顯示姿態快速切換。</p></div>
+          <div class="phase-card"><span>03</span><h3>打開與落冰</h3><p>接近冰面前先打開肢體減速，單腳承接重量，再以屈膝吸收衝擊並延續滑行。</p></div>
+        </figcaption>
+      </figure>
+    </section>
+  </main>
+
+  <footer id="story-footer">
+    <p class="footer-quote">“Great skating makes effort look like <em>flight.</em>”</p>
+    <div class="footer-meta">
+      <span>YUNA KIM · 2010 VANCOUVER FREE SKATE<br>Analysis segment: 01:49—01:54</span>
+      <span>125 frames · 25 fps<br>Motion study &amp; visual essay</span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const scrubSection = document.querySelector('#motion-breakdown');
+      const scrubVideo = document.querySelector('#scrub-video');
+      const scrubVideos = [...document.querySelectorAll('.scrub-video')];
+      const steps = [...document.querySelectorAll('.motion-step')];
+      const progressBar = document.querySelector('.motion-progress span');
+      const sequence = document.querySelector('#movement-sequence');
+      const track = document.querySelector('.sequence-track');
+      const sequenceImage = track.querySelector('img');
+      const sequenceNotes = [...document.querySelectorAll('.sequence-note')];
+      const counter = document.querySelector('.sequence-counter span');
+      let videoDuration = 5;
+      let sequenceDistance = 0;
+      let ticking = false;
+
+      scrubVideo.addEventListener('loadedmetadata', () => {
+        videoDuration = Number.isFinite(scrubVideo.duration) ? scrubVideo.duration : 5;
+        scrubVideo.currentTime = .01;
+      });
+
+      function sizeSequence() {
+        sequenceDistance = Math.max(0, sequenceImage.getBoundingClientRect().width - innerWidth);
+        sequence.style.height = `${innerHeight + sequenceDistance}px`;
+      }
+
+      function update() {
+        const scrubRect = scrubSection.getBoundingClientRect();
+        const scrubRange = Math.max(1, scrubSection.offsetHeight - innerHeight);
+        const scrubProgress = Math.min(1, Math.max(0, -scrubRect.top / scrubRange));
+        if (!reduceMotion && scrubVideo.readyState >= 1) {
+          const targetTime = scrubProgress * Math.max(.01, videoDuration - .04);
+          scrubVideos.forEach((video) => {
+            if (video.readyState >= 1 && Math.abs(video.currentTime - targetTime) > .025) video.currentTime = targetTime;
+          });
+        }
+        progressBar.style.width = `${scrubProgress * 100}%`;
+
+        const focusY = innerHeight * .5;
+        let active = steps[0];
+        let closest = Infinity;
+        steps.forEach((step) => {
+          const rect = step.getBoundingClientRect();
+          const distance = Math.abs(rect.top + rect.height / 2 - focusY);
+          if (distance < closest) { closest = distance; active = step; }
+        });
+        steps.forEach((step) => step.classList.toggle('is-active', step === active));
+
+        const sequenceRect = sequence.getBoundingClientRect();
+        const sequenceRange = Math.max(1, sequence.offsetHeight - innerHeight);
+        const sequenceProgress = Math.min(1, Math.max(0, -sequenceRect.top / sequenceRange));
+        track.style.transform = `translate3d(${-sequenceProgress * sequenceDistance}px, 0, 0)`;
+        counter.textContent = String(Math.round(sequenceProgress * 100)).padStart(2, '0');
+        let activeSequenceNote = sequenceNotes[0];
+        sequenceNotes.forEach((note) => {
+          if (sequenceProgress >= Number(note.dataset.start)) activeSequenceNote = note;
+        });
+        sequenceNotes.forEach((note) => {
+          const isActive = note === activeSequenceNote;
+          note.classList.toggle('is-active', isActive);
+          note.setAttribute('aria-hidden', String(!isActive));
+        });
+        ticking = false;
+      }
+
+      function requestUpdate() {
+        if (!ticking) { requestAnimationFrame(update); ticking = true; }
+      }
+
+      sequenceImage.addEventListener('load', () => { sizeSequence(); requestUpdate(); });
+      addEventListener('resize', () => { sizeSequence(); requestUpdate(); }, { passive: true });
+      addEventListener('scroll', requestUpdate, { passive: true });
+      sizeSequence();
+      update();
+    })();
+  </script>
+</body>
+</html>
