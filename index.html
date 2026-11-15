@@ -66,6 +66,7 @@
 <a class="tab" id="tab-slide-effect" href="#slide-effect"><span class="number">03</span> Slide effect</a>
 <a class="tab" id="tab-demos" href="#demos"><span class="number">04</span> 系列案例 Demo</a>
 <a class="tab" id="tab-video-demos" href="#video-demos"><span class="number">05</span> 案例 Demo 2</a>
+<a class="tab" id="tab-demo-3" href="#demo-3"><span class="number">06</span> 案例 Demo 3</a>
 </nav>
 <main id="main">
 <section id="foundations" aria-labelledby="tab-foundations" lang="en">
@@ -141,6 +142,13 @@
 <a class="card" href="yuna-kim/yunakim.html"><div class="card-body"><div class="card-top"><span class="tag">Motion Study / Scrollytelling</span><span class="arrow" aria-hidden="true">↗</span></div><h3>冰上的 3.56 秒｜Yuna Kim</h3><p>以同步捲軸影片、逐格橫向長卷與重疊影像，拆解 Yuna Kim 三連跳的助滑、起跳、旋轉與落冰。</p><span class="file">yuna-kim/yunakim.html</span></div></a>
 </div>
 </section>
+<section id="demo-3" aria-labelledby="tab-demo-3">
+<div class="section-head"><div><h2>多方向捲動：從參考專題到教學拆解。</h2><p>比較 ESPN 的完整編輯專題，以及以原生 HTML、CSS、JavaScript 重新拆解互動原理的教學版本。</p></div><span class="count">2 DEMOS</span></div>
+<div class="grid">
+<a class="card" href="https://www.espn.com/espn/feature/story?id=43832710" target="_blank" rel="noopener noreferrer"><div class="card-body"><div class="card-top"><span class="tag">Original Reference / ESPN</span><span class="arrow" aria-hidden="true">↗</span></div><h3>How F1 Has Evolved Since 1950</h3><p>原始參考專題：在大型二維內容世界中，讓鏡頭隨垂直捲動進行橫向、直向與斜向移動。</p><span class="file">espn.com · 開新視窗</span></div></a>
+<a class="card" href="multi-axis-scroll/index.html"><div class="card-body"><div class="card-top"><span class="tag">Clean-room Demo / WEB115</span><span class="arrow" aria-hidden="true">↗</span></div><h3>沿線移動｜多方向捲動教學 Demo</h3><p>不使用原站內容與素材，以大型 DOM 世界、SVG path 和 translate3d() 拆解同類型的鏡頭運動。</p><span class="file">multi-axis-scroll/index.html</span></div></a>
+</div>
+</section>
 </main>
 <footer class="footer"><span>WEB115 / Teaching examples</span><span>Read the code. Try a change. See what happens.</span></footer>
 </div>
@@ -148,7 +156,8 @@
 // Each category has its own URL hash; without JavaScript all examples remain visible.
 const tabs = [...document.querySelectorAll('.tab')];
 const panels = tabs.map(tab => document.querySelector(tab.getAttribute('href')));
-document.querySelector('.tabs').setAttribute('role', 'tablist');
+const tablist = document.querySelector('.tabs');
+tablist.setAttribute('role', 'tablist');
 tabs.forEach((tab, index) => {
   tab.setAttribute('role', 'tab');
   tab.setAttribute('aria-controls', panels[index].id);
@@ -176,6 +185,8 @@ function activate(index) {
     tab.tabIndex = i === index ? 0 : -1;
     panels[i].hidden = i !== index;
   });
+  const activeTab = tabs[index];
+  tablist.scrollLeft = activeTab.offsetLeft - (tablist.clientWidth - activeTab.offsetWidth) / 2;
 }
 function syncHash() {
   const index = tabs.findIndex(tab => tab.hash === location.hash);

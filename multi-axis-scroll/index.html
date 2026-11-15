@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="以大型二維 DOM 世界與 SVG 路徑示範橫向、直向及斜向捲動鏡頭。">
+  <title>沿線移動｜多方向捲動教學 Demo</title>
+  <link rel="canonical" href="https://p4css.github.io/web115/multi-axis-scroll/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WEB115 Example Library">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:title" content="沿線移動｜多方向捲動教學 Demo">
+  <meta property="og:description" content="以大型二維 DOM 世界與 SVG 路徑示範橫向、直向及斜向捲動鏡頭。">
+  <meta property="og:url" content="https://p4css.github.io/web115/multi-axis-scroll/">
+  <meta property="og:image" content="https://p4css.github.io/web115/og-web115.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WEB115 多方向捲動教學 Demo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="沿線移動｜多方向捲動教學 Demo">
+  <meta name="twitter:description" content="以大型二維 DOM 世界與 SVG 路徑示範橫向、直向及斜向捲動鏡頭。">
+  <meta name="twitter:image" content="https://p4css.github.io/web115/og-web115.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#world">跳到互動內容</a>
+
+  <header class="toolbar" aria-label="Demo 工具列">
+    <a class="back-link" href="../index.html#scrolling">WEB115 / SCROLL LAB</a>
+    <p class="toolbar-note">只要上下捲動，鏡頭就會沿著二維路線移動</p>
+    <button class="route-button" id="route-button" type="button" aria-pressed="false">顯示完整路線</button>
+  </header>
+
+  <div class="viewport" aria-label="大型二維捲動場景">
+    <div class="world" id="world">
+      <div class="world-grid" aria-hidden="true"></div>
+
+      <svg class="world-route" viewBox="0 0 7200 4500" aria-hidden="true">
+        <path class="route-shadow" d="M 700 620 L 2350 620 Q 2750 620 2750 1020 L 2750 2210 Q 2750 2520 3060 2520 L 4660 3620 Q 4890 3780 5170 3780 L 6500 3780"/>
+        <path id="camera-path" d="M 700 620 L 2350 620 Q 2750 620 2750 1020 L 2750 2210 Q 2750 2520 3060 2520 L 4660 3620 Q 4890 3780 5170 3780 L 6500 3780"/>
+      </svg>
+
+      <section class="scene scene-intro" id="scene-intro" data-scene="起點：向右" style="--x: 260px; --y: 210px;">
+        <p class="scene-index">00 / DEPARTURE</p>
+        <h1>不是橫向捲軸，<br>是鏡頭向右走。</h1>
+        <p class="scene-copy">你仍然只是在上下捲動。這個頁面把捲動進度換算成 SVG 路徑上的座標，再反向移動整個世界。</p>
+        <div class="scroll-cue" aria-hidden="true"><span></span>向下捲動</div>
+      </section>
+
+      <section class="scene scene-horizontal" id="scene-horizontal" data-scene="第一段：橫向" style="--x: 1320px; --y: 225px;">
+        <p class="scene-index">01 / HORIZONTAL</p>
+        <h2>當 Y 不變，<br>只有 X 增加。</h2>
+        <div class="axis-diagram" aria-label="橫向座標示意">
+          <span class="axis-label">Y = 620</span>
+          <i></i><i></i><i></i><i></i>
+        </div>
+        <p class="scene-copy">路徑的第一段是一條水平線。攝影機焦點從左往右走，所以畫面中的內容看起來向左滑過。</p>
+      </section>
+
+      <section class="scene scene-turn" id="scene-turn" data-scene="轉彎：二次曲線" style="--x: 2400px; --y: 720px;">
+        <p class="scene-index">02 / THE TURN</p>
+        <h2>Q 指令把直角<br>磨成一個彎。</h2>
+        <code>Q 2750 620, 2750 1020</code>
+        <p class="scene-copy">SVG 的 quadratic curve 同時改變 X 與 Y，讓鏡頭自然轉向，而不是突然跳到另一條軸線。</p>
+      </section>
+
+      <section class="scene scene-vertical" id="scene-vertical" data-scene="第二段：直向" style="--x: 2230px; --y: 1380px;">
+        <p class="scene-index">03 / VERTICAL</p>
+        <div class="vertical-rule" aria-hidden="true"><span>Y</span><i></i><i></i><i></i></div>
+        <h2>X 固定，<br>Y 持續增加。</h2>
+        <p class="scene-copy">同一個進度控制器，現在讓鏡頭往下走。內容仍在原本的 DOM 座標上，沒有切換成另一套頁面。</p>
+      </section>
+
+      <section class="scene scene-diagonal" id="scene-diagonal" data-scene="第三段：斜向" style="--x: 3420px; --y: 2790px;">
+        <p class="scene-index">04 / DIAGONAL</p>
+        <h2>X 與 Y<br>一起改變。</h2>
+        <p class="coordinate-pair"><span>ΔX +1600</span><span>ΔY +1100</span></p>
+        <p class="scene-copy">斜向移動不是旋轉網頁，而是每一幀同時更新世界的水平與垂直位移。</p>
+      </section>
+
+      <section class="scene scene-finish" id="scene-finish" data-scene="終點：再次向右" style="--x: 5880px; --y: 3380px;">
+        <p class="scene-index">05 / ARRIVAL</p>
+        <h2>一條垂直捲軸，<br>走完整個二維世界。</h2>
+        <ol class="recipe-list">
+          <li><strong>01</strong><span>建立固定 viewport</span></li>
+          <li><strong>02</strong><span>把內容放進大型 world</span></li>
+          <li><strong>03</strong><span>用 SVG path 定義鏡頭路線</span></li>
+          <li><strong>04</strong><span>以 scroll progress 取得路徑座標</span></li>
+          <li><strong>05</strong><span>反向 translate3d() 整個 world</span></li>
+        </ol>
+        <a class="restart-link" href="#top">回到起點 ↑</a>
+      </section>
+
+      <div class="coordinate-stamp stamp-one" aria-hidden="true">X 2750<br>Y 620</div>
+      <div class="coordinate-stamp stamp-two" aria-hidden="true">X 4660<br>Y 3620</div>
+    </div>
+  </div>
+
+  <aside class="hud" aria-label="鏡頭狀態">
+    <div class="status-block">
+      <span class="status-label">CAMERA ROUTE</span>
+      <strong id="scene-name">起點：向右</strong>
+    </div>
+    <div class="progress-block" aria-label="捲動進度">
+      <span id="progress-value">000%</span>
+      <div class="progress-track"><i id="progress-fill"></i></div>
+    </div>
+    <svg class="mini-map" viewBox="0 0 300 205" role="img" aria-label="完整路線與目前位置">
+      <path d="M 18 24 L 102 24 Q 120 24 120 42 L 120 88 Q 120 104 136 104 L 216 162 Q 228 174 244 174 L 286 174"/>
+      <circle id="map-dot" cx="18" cy="24" r="5"/>
+    </svg>
+  </aside>
+
+  <div class="direction-indicator" aria-hidden="true">
+    <span id="direction-arrow">→</span>
+    <small id="direction-label">RIGHT</small>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
