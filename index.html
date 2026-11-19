@@ -51,6 +51,21 @@
 .step-description{margin-bottom:12px}
 .demo-link{padding:17px 19px}
 @media(max-width:700px){.hero{padding:36px 0 30px}.journey-step{grid-template-columns:22px 1fr;gap:10px;padding:0}.step-marker{width:auto;height:auto}.tab{justify-content:flex-start}}
+
+/* Minimal category navigation and direct section headings. */
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow:visible;padding:4px;border:0;background:var(--ink)}
+.tab{min-width:0;margin:0;padding:8px 12px;border:1px solid #46504c;color:#c8ceca;background:#2c3431;white-space:normal;transition:color .18s,background-color .18s,border-color .18s}
+.tab:hover{color:#fff;background:#37413d;border-color:#66716c}
+.tab[aria-selected=true]{color:#fff;background:var(--accent);border-color:var(--accent)}
+.tab:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+.section-head{display:block;margin-bottom:24px}
+.section-head h2{margin:0}
+.section-head p,.section-head .count{display:none}
+.featured-grid{margin-bottom:12px}
+.hero h1{margin-bottom:0}
+.example-group+.example-group{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
+.group-title{margin:0 0 12px;color:var(--muted);font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:700px){.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.tab{flex:none;justify-content:flex-start;white-space:normal}}
 </style>
 </head>
 <body>
@@ -58,19 +73,20 @@
 <div class="shell">
 <header class="masthead"><a class="brand" href="index.html">WEB<span>115</span></a><span class="course-label">Web Design &amp; Storytelling</span></header>
 <section class="hero" aria-labelledby="page-title">
-<div><p class="eyebrow">A collection for learning by doing</p><h1 id="page-title">The example<br><em>library.</em></h1><p>從基礎網頁語言、捲動原理，到與 AI 反覆調整的敘事案例。記錄每個版本的做法，也保留效果不如預期的嘗試。</p></div>
+<div><p class="eyebrow">A collection for learning by doing</p><h1 id="page-title">The example<br><em>library.</em></h1></div>
 </section>
 <nav class="tabs" aria-label="Example categories">
 <a class="tab" id="tab-foundations" href="#foundations"><span class="number">01</span> 基礎網頁語言</a>
 <a class="tab" id="tab-scrolling" href="#scrolling"><span class="number">02</span> 捲動效果解析</a>
 <a class="tab" id="tab-slide-effect" href="#slide-effect"><span class="number">03</span> Slide effect</a>
-<a class="tab" id="tab-demos" href="#demos"><span class="number">04</span> 系列案例 Demo</a>
-<a class="tab" id="tab-video-demos" href="#video-demos"><span class="number">05</span> 案例 Demo 2</a>
-<a class="tab" id="tab-demo-3" href="#demo-3"><span class="number">06</span> 案例 Demo 3</a>
+<a class="tab" id="tab-data-stories" href="#data-stories"><span class="number">04</span> 資料敘事</a>
+<a class="tab" id="tab-parallax" href="#parallax"><span class="number">05</span> Parallax Scrolling</a>
+<a class="tab" id="tab-video" href="#video"><span class="number">06</span> Video</a>
+<a class="tab" id="tab-multimedia" href="#multimedia"><span class="number">07</span> 多媒體製作</a>
 </nav>
 <main id="main">
 <section id="foundations" aria-labelledby="tab-foundations" lang="en">
-<div class="section-head"><div><h2>Learn the building blocks.</h2><p>Simple pages to read, inspect, and experiment with.</p></div><span class="count">5 EXAMPLES</span></div>
+<div class="section-head"><h2>基礎網頁語言</h2></div>
 <div class="grid">
 <a class="card" href="basic.html"><div class="card-body"><div class="card-top"><span class="tag">HTML / CSS</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Basic HTML &amp; CSS</h3><p>Explore page structure, content sections, and styling in a hand-built webpage.</p><span class="file">basic.html</span></div></a>
 <a class="card" href="bt.html"><div class="card-body"><div class="card-top"><span class="tag">Bootstrap</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Introduction to Bootstrap</h3><p>Build a responsive layout with containers, rows, columns, and ready-made components.</p><span class="file">bt.html</span></div></a>
@@ -80,9 +96,11 @@
 </div>
 </section>
 <section id="scrolling" aria-labelledby="tab-scrolling">
-<div class="section-head"><div><h2>把捲動與動態，拆開來看。</h2><p>七個 Scroll Lab 互動模型，加上一頁 hover 與 scroll-trigger CSS animation 效果庫。</p></div><span class="count">8 TOPICS</span></div>
-<a class="lab-entry" href="scrolling-lab.html"><span><strong>開啟完整 Scroll Lab</strong><span class="file">scrolling-lab.html</span></span><span aria-hidden="true">↗</span></a>
-<a class="lab-entry" href="css-animation.html"><span><strong>CSS Attention Animation｜互動特效標本</strong><span class="file">css-animation.html</span></span><span aria-hidden="true">↗</span></a>
+<div class="section-head"><h2>捲動效果解析</h2></div>
+<div class="grid featured-grid">
+<a class="card" href="scrolling-lab.html"><div class="card-body"><div class="card-top"><span class="tag">Scroll fundamentals</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Scrolling Lab</h3><p>從 fixed、sticky、可捲動距離、進度條、物件位移到橫向捲動，逐項拆解七個核心模型。</p><span class="file">scrolling-lab.html</span></div></a>
+<a class="card" href="css-animation.html"><div class="card-body"><div class="card-top"><span class="tag">CSS animation</span><span class="arrow" aria-hidden="true">↗</span></div><h3>CSS Attention-Animation Gallery</h3><p>整理 hover 與 scroll-trigger attention animations，對照不同動效的觸發方式與 CSS 寫法。</p><span class="file">css-animation.html</span></div></a>
+</div>
 <div class="lesson-grid">
 <a class="lesson" href="scrolling-lab.html#fixed"><span class="lesson-number">00</span><div><h3>background-attachment: fixed</h3><p>比較固定背景與一般背景；觀察文字與背景各自如何移動。</p></div><span class="arrow" aria-hidden="true">↗</span></a>
 <a class="lesson" href="scrolling-lab.html#sticky"><span class="lesson-number">01</span><div><h3>Sticky-top</h3><p>透過透明剖面，觀察 sticky 元素、外層容器與固定視窗的關係。</p></div><span class="arrow" aria-hidden="true">↗</span></a>
@@ -94,7 +112,7 @@
 </div>
 </section>
 <section id="slide-effect" aria-labelledby="tab-slide-effect">
-<div class="section-head"><div><h2>Slide effect 的版本演進。</h2><p>依實作順序閱讀：從最簡單的整頁滑動開始，加入長頁，再比較不同技術與重製版本。</p></div><span class="count">4 STAGES · 6 DEMOS</span></div>
+<div class="section-head"><h2>Slide effect</h2></div>
 <ol class="journey">
 <li class="journey-step"><div class="step-marker" aria-hidden="true">01</div><div class="step-content"><h3>從最簡單的 Slide effect 開始</h3><p class="step-description">先用最少的程式碼，把捲動手勢轉成整頁滑動。</p><div class="step-links">
 <a class="demo-link" href="slideshow.html"><div><h4>最簡單的做法</h4><p>以 jQuery 接收滾輪事件，搭配 translateY 與 CSS transition 切換頁面。</p><span class="file">slideshow.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
@@ -112,16 +130,11 @@
 </div></div></li>
 </ol>
 </section>
-<section id="demos" aria-labelledby="tab-demos">
-<div class="section-head"><div><h2>從捲動效果，到完整案例。</h2><p>將視差、3D 模型、資料點與像素人物逐步調整成敘事作品。</p></div><span class="count">5 STAGES · 7 DEMOS</span></div>
+<section id="data-stories" aria-labelledby="tab-data-stories">
+<div class="section-head"><h2>資料敘事</h2></div>
 <ol class="journey">
 <li class="journey-step"><div class="step-marker" aria-hidden="true">05</div><div class="step-content"><h3>臺灣選舉：逐步調教成敘事網頁</h3><p class="step-description">從效果練習走向完整案例，透過反覆調整地圖、縣市浮起效果與捲動敘事，逐步做到預期的樣子。</p><div class="step-links">
 <a class="demo-link" href="election-story/taiwan-election-2026.html"><div><h4>臺灣選舉 Scrollytelling</h4><p>結合固定地圖與捲動文字，依敘事呈現不同縣市。</p><span class="file">election-story/taiwan-election-2026.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
-</div></div></li>
-<li class="journey-step"><div class="step-marker" aria-hidden="true">06</div><div class="step-content"><h3>先做好 3D 模型，再加入捲動敘事</h3><p class="step-description">從 Claude 製作的頁面開始，拆出獨立模型，再修成平滑捲動的故事。</p><div class="step-links">
-<a class="demo-link" href="ntu-journalism.html"><div><h4>Claude 製作的版本</h4><p>最初的新聞所網頁版本。</p><span class="file">ntu-journalism.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
-<a class="demo-link" href="ntu-journalism-3d-standalone.html"><div><h4>獨立 3D 模型</h4><p>先把 3D 模型獨立出來，檢視各樓層，不加其他敘事效果。</p><span class="file">ntu-journalism-3d-standalone.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
-<a class="demo-link" href="ntu-journalism-scroll-story.html"><div><h4>平滑捲動敘事</h4><p>以模型為基礎加入敘事，調整視角與樓層切換的平滑過渡。</p><span class="file">ntu-journalism-scroll-story.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
 </div></div></li>
 <li class="journey-step"><div class="step-marker" aria-hidden="true">07</div><div class="step-content"><h3>用 100 個點，呈現學生背景與職涯</h3><p class="step-description">讓同一組 100 個點隨捲動重新分組，以每個點代表 1%，呈現學生背景、畢業方式與職涯方向的比例變化。</p><div class="step-links">
 <a class="demo-link" href="ntu-journalism-student-story.html"><div><h4>100 個點，看見臺大新聞所</h4><p>以點陣重組與平滑移動串起資料敘事；頁面中的比例為規劃示意。</p><span class="file">ntu-journalism-student-story.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
@@ -129,28 +142,44 @@
 <li class="journey-step"><div class="step-marker" aria-hidden="true">08</div><div class="step-content"><h3>用像素人物，呈現群體的分化</h3><p class="step-description">以 100 位像素人物作為群像，隨捲動從多種顏色、相近者聚集，到最後分成兩群，練習用顏色、位置與神情推進敘事。</p><div class="step-links">
 <a class="demo-link" href="pixel-crowd-story.html"><div><h4>當顏色只剩兩種</h4><p>結合像素人物與捲動動畫，呈現群體聚集、逐漸同質化與彼此懷疑的變化。</p><span class="file">pixel-crowd-story.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
 </div></div></li>
-<li class="journey-step"><div class="step-marker" aria-hidden="true">09</div><div class="step-content"><h3>用多層景深，製作視差捲動故事</h3><p class="step-description">將背景、中景、人物與前景拆成不同圖層，讓各層隨捲動以不同速度移動，形成六幕連續的視差敘事。</p><div class="step-links">
-<a class="demo-link" href="parallax-scrolling-alladin/index.html"><div><h4>A Whole New World</h4><p>以阿拉丁的飛行旅程示範六個分層場景，觀察捲動距離如何轉換成景深與動態。</p><span class="file">parallax-scrolling-alladin/index.html</span></div><span class="arrow" aria-hidden="true">↗</span></a>
-</div></div></li>
 </ol>
 </section>
-<section id="video-demos" aria-labelledby="tab-video-demos">
-<div class="section-head"><div><h2>Video demo：影片與捲動敘事。</h2><p>從 sticky video 的基本結構，到影片逐格控制、橫向時間長卷與完整視覺專題。</p></div><span class="count">3 DEMOS</span></div>
+<section id="parallax" aria-labelledby="tab-parallax">
+<div class="section-head"><h2>Parallax Scrolling</h2></div>
+<section class="example-group" aria-labelledby="layered-parallax-title">
+<h3 class="group-title" id="layered-parallax-title">Layered Parallax</h3>
 <div class="grid">
-<a class="card" href="wapo-border-crossing/index_jquery.html"><div class="card-body"><div class="card-top"><span class="tag">Video / jQuery</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Sticky video｜jQuery 最簡版</h3><p>用 sticky 區塊與 jQuery 捲動事件，示範影片如何停留在視窗中並依序切換段落。</p><span class="file">wapo-border-crossing/index_jquery.html</span></div></a>
-<a class="card" href="wapo-border-crossing/index.html"><div class="card-body"><div class="card-top"><span class="tag">Video / Vanilla JavaScript</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Scroll-triggered video story</h3><p>加入影片淡入淡出、字幕、段落進度、聲音控制與鄰近影片延遲載入的完整示範。</p><span class="file">wapo-border-crossing/index.html</span></div></a>
-<a class="card" href="yuna-kim/yunakim.html"><div class="card-body"><div class="card-top"><span class="tag">Motion Study / Scrollytelling</span><span class="arrow" aria-hidden="true">↗</span></div><h3>冰上的 3.56 秒｜Yuna Kim</h3><p>以同步捲軸影片、逐格橫向長卷與重疊影像，拆解 Yuna Kim 三連跳的助滑、起跳、旋轉與落冰。</p><span class="file">yuna-kim/yunakim.html</span></div></a>
+<a class="card" href="parallax-scrolling-alladin/index.html"><div class="card-body"><div class="card-top"><span class="tag">Layered parallax</span><span class="arrow" aria-hidden="true">↗</span></div><h3>A Whole New World</h3><p>分別移動背景、中景、人物與前景，以不同速度建立六幕連續的景深感。</p><span class="file">parallax-scrolling-alladin/index.html</span></div></a>
 </div>
 </section>
-<section id="demo-3" aria-labelledby="tab-demo-3">
-<div class="section-head"><div><h2>多方向捲動：從參考專題到教學拆解。</h2><p>比較 ESPN 的完整編輯專題，以及以原生 HTML、CSS、JavaScript 重新拆解互動原理的教學版本。</p></div><span class="count">2 DEMOS</span></div>
+<section class="example-group" aria-labelledby="moving-large-canvas-title">
+<h3 class="group-title" id="moving-large-canvas-title">Spotlight — Moving Large Canvas</h3>
 <div class="grid">
-<a class="card" href="https://www.espn.com/espn/feature/story?id=43832710" target="_blank" rel="noopener noreferrer"><div class="card-body"><div class="card-top"><span class="tag">Original Reference / ESPN</span><span class="arrow" aria-hidden="true">↗</span></div><h3>How F1 Has Evolved Since 1950</h3><p>原始參考專題：在大型二維內容世界中，讓鏡頭隨垂直捲動進行橫向、直向與斜向移動。</p><span class="file">espn.com · 開新視窗</span></div></a>
-<a class="card" href="multi-axis-scroll/index.html"><div class="card-body"><div class="card-top"><span class="tag">Clean-room Demo / WEB115</span><span class="arrow" aria-hidden="true">↗</span></div><h3>沿線移動｜多方向捲動教學 Demo</h3><p>不使用原站內容與素材，以大型 DOM 世界、SVG path 和 translate3d() 拆解同類型的鏡頭運動。</p><span class="file">multi-axis-scroll/index.html</span></div></a>
+<a class="card" href="https://www.espn.com/espn/feature/story?id=43832710" target="_blank" rel="noopener noreferrer"><div class="card-body"><div class="card-top"><span class="tag">Original Reference / ESPN</span><span class="arrow" aria-hidden="true">↗</span></div><h3>How F1 Has Evolved Since 1950</h3><p>在大型二維內容世界中，讓鏡頭隨垂直捲動進行橫向、直向與斜向移動。</p><span class="file">espn.com · 開新視窗</span></div></a>
+<a class="card" href="multi-axis-scroll/index.html"><div class="card-body"><div class="card-top"><span class="tag">Clean-room Demo / WEB115</span><span class="arrow" aria-hidden="true">↗</span></div><h3>沿線移動｜多方向捲動教學 Demo</h3><p>以大型 DOM 世界、SVG path 和 translate3d() 拆解整個圖面的鏡頭運動。</p><span class="file">multi-axis-scroll/index.html</span></div></a>
+<a class="card" href="https://p4css.github.io/webScroll/9_5_scroll_move_large_bg.html" target="_blank" rel="noopener noreferrer"><div class="card-body"><div class="card-top"><span class="tag">Original / Background-position</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Moving a Large Background Image</h3><p>原版：用四段垂直捲動改變大型背景圖的 X／Y 位置，讓固定視窗依序巡覽人物全身。</p><span class="file">p4css.github.io/webScroll · 開新視窗</span></div></a>
+<a class="card" href="moving-large-image-path/index.html"><div class="card-body"><div class="card-top"><span class="tag">Rebuilt / Camera path</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Moving a Large Image｜Camera Path Edition</h3><p>重製版：把圖片放進大型 DOM 世界，沿 SVG 路徑移動整個圖面並巡覽相同焦點。</p><span class="file">moving-large-image-path/index.html</span></div></a>
+</div>
+</section>
+</section>
+<section id="video" aria-labelledby="tab-video">
+<div class="section-head"><h2>Video</h2></div>
+<div class="grid">
+<a class="card" href="wapo-border-crossing/index_jquery.html"><div class="card-body"><div class="card-top"><span class="tag">Video / jQuery</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Sticky video｜jQuery 最簡版</h3><p>用 sticky 區塊與 jQuery 捲動事件，示範影片如何停留在視窗中並依序切換段落。</p><span class="file">wapo-border-crossing/index_jquery.html</span></div></a>
+<a class="card" href="wapo-border-crossing/index.html"><div class="card-body"><div class="card-top"><span class="tag">Video / Vanilla JavaScript</span><span class="arrow" aria-hidden="true">↗</span></div><h3>Scroll-triggered video story</h3><p>加入影片淡入淡出、字幕、段落進度、聲音控制與鄰近影片延遲載入。</p><span class="file">wapo-border-crossing/index.html</span></div></a>
+<a class="card" href="yuna-kim/yunakim.html"><div class="card-body"><div class="card-top"><span class="tag">Motion Study / Video</span><span class="arrow" aria-hidden="true">↗</span></div><h3>冰上的 3.56 秒｜Yuna Kim</h3><p>結合影片、逐格橫向長卷與重疊影像，拆解三連跳的助滑、起跳、旋轉與落冰。</p><span class="file">yuna-kim/yunakim.html</span></div></a>
+</div>
+</section>
+<section id="multimedia" aria-labelledby="tab-multimedia">
+<div class="section-head"><h2>多媒體製作</h2></div>
+<div class="grid">
+<a class="card" href="ntu-journalism.html"><div class="card-body"><div class="card-top"><span class="tag">Web / 3D</span><span class="arrow" aria-hidden="true">↗</span></div><h3>新聞所網頁｜初始版本</h3><p>從完整頁面開始，觀察文字、空間與 3D 建築模型如何組合。</p><span class="file">ntu-journalism.html</span></div></a>
+<a class="card" href="ntu-journalism-3d-standalone.html"><div class="card-body"><div class="card-top"><span class="tag">Standalone 3D</span><span class="arrow" aria-hidden="true">↗</span></div><h3>獨立 3D 模型</h3><p>將模型從頁面中拆出，單獨檢視建築樓層與立體結構。</p><span class="file">ntu-journalism-3d-standalone.html</span></div></a>
+<a class="card" href="ntu-journalism-scroll-story.html"><div class="card-body"><div class="card-top"><span class="tag">3D / Scrollytelling</span><span class="arrow" aria-hidden="true">↗</span></div><h3>3D 平滑捲動敘事</h3><p>把模型重新放入敘事，隨段落平滑調整視角與樓層狀態。</p><span class="file">ntu-journalism-scroll-story.html</span></div></a>
+<a class="card" href="yuna-kim/yunakim.html"><div class="card-body"><div class="card-top"><span class="tag">Motion Study / Scrollytelling</span><span class="arrow" aria-hidden="true">↗</span></div><h3>冰上的 3.56 秒｜Yuna Kim</h3><p>結合影片、逐格橫向長卷與重疊影像，拆解三連跳的助滑、起跳、旋轉與落冰。</p><span class="file">yuna-kim/yunakim.html</span></div></a>
 </div>
 </section>
 </main>
-<footer class="footer"><span>WEB115 / Teaching examples</span><span>Read the code. Try a change. See what happens.</span></footer>
 </div>
 <script>
 // Each category has its own URL hash; without JavaScript all examples remain visible.
@@ -185,11 +214,11 @@ function activate(index) {
     tab.tabIndex = i === index ? 0 : -1;
     panels[i].hidden = i !== index;
   });
-  const activeTab = tabs[index];
-  tablist.scrollLeft = activeTab.offsetLeft - (tablist.clientWidth - activeTab.offsetWidth) / 2;
 }
 function syncHash() {
-  const index = tabs.findIndex(tab => tab.hash === location.hash);
+  const legacyHashes = {'#demos': '#data-stories', '#video-demos': '#video', '#demo-3': '#parallax'};
+  const currentHash = legacyHashes[location.hash] || location.hash;
+  const index = tabs.findIndex(tab => tab.hash === currentHash);
   activate(index < 0 ? 0 : index);
 }
 window.addEventListener('hashchange', syncHash);

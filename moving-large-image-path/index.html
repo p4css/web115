@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="以大型 DOM 世界、SVG 路徑與垂直捲動，重新製作人物圖片巡覽效果。">
+  <title>Moving a Large Image｜Camera Path Edition</title>
+  <link rel="canonical" href="https://p4css.github.io/web115/moving-large-image-path/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WEB115 Example Library">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:title" content="Moving a Large Image｜Camera Path Edition">
+  <meta property="og:description" content="以大型 DOM 世界、SVG 路徑與垂直捲動，重新製作人物圖片巡覽效果。">
+  <meta property="og:url" content="https://p4css.github.io/web115/moving-large-image-path/">
+  <meta property="og:image" content="https://p4css.github.io/web115/og-web115.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WEB115 大型圖片鏡頭路徑 Demo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Moving a Large Image｜Camera Path Edition">
+  <meta name="twitter:description" content="以大型 DOM 世界、SVG 路徑與垂直捲動，重新製作人物圖片巡覽效果。">
+  <meta name="twitter:image" content="https://p4css.github.io/web115/og-web115.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#world">跳到人物巡覽</a>
+
+  <header class="toolbar">
+    <a href="../index.html#parallax">WEB115 / PARALLAX</a>
+    <span>CAMERA-PATH STUDY · 02</span>
+    <button id="route-toggle" type="button" aria-pressed="false">顯示路線</button>
+  </header>
+
+  <main class="viewport" aria-label="大型人物圖片巡覽">
+    <div class="world" id="world">
+      <div class="world-grid" aria-hidden="true"></div>
+      <img class="subject-image" src="assets/stand90n.jpg" width="1619" height="2236" alt="同一人物的正面與側面全身圖">
+
+      <svg class="camera-route" viewBox="0 0 2800 3800" aria-hidden="true">
+        <path class="route-halo" d="M 1150 700 L 1150 3030 Q 1150 3150 1280 3150 L 1925 3030 Q 2020 3030 2020 2910 L 1880 705 Q 1880 560 1730 560 L 1300 560 Q 1150 560 1150 700"/>
+        <path id="camera-path" d="M 1150 700 L 1150 3030 Q 1150 3150 1280 3150 L 1925 3030 Q 2020 3030 2020 2910 L 1880 705 Q 1880 560 1730 560 L 1300 560 Q 1150 560 1150 700"/>
+        <g class="route-points">
+          <circle cx="1150" cy="700" r="18"/>
+          <circle cx="1150" cy="3030" r="18"/>
+          <circle cx="1925" cy="3030" r="18"/>
+          <circle cx="1880" cy="705" r="18"/>
+        </g>
+      </svg>
+
+      <span class="coordinate coordinate-front-head">FRONT / HEAD<br>X 1150 · Y 700</span>
+      <span class="coordinate coordinate-front-feet">FRONT / FEET<br>X 1150 · Y 3030</span>
+      <span class="coordinate coordinate-side-feet">SIDE / FEET<br>X 1925 · Y 3030</span>
+      <span class="coordinate coordinate-side-head">SIDE / HEAD<br>X 1880 · Y 705</span>
+    </div>
+  </main>
+
+  <section class="intro-panel" id="intro-panel" aria-labelledby="page-title">
+    <p>Moving large image / Camera path</p>
+    <h1 id="page-title">不移動背景，<br>改移動整個世界。</h1>
+    <span>向下捲動開始巡覽 ↓</span>
+  </section>
+
+  <aside class="hud" aria-live="polite">
+    <div class="stage-copy">
+      <span id="stage-index">01 / 05</span>
+      <strong id="stage-title">正面｜頭部</strong>
+      <p id="stage-description">鏡頭從正面人物的頭部開始。</p>
+    </div>
+    <div class="progress-panel">
+      <span id="progress-value">000%</span>
+      <div class="progress-track"><i id="progress-fill"></i></div>
+    </div>
+    <svg class="mini-map" viewBox="0 0 180 160" role="img" aria-label="鏡頭路線與目前位置">
+      <path id="mini-path" d="M 38 24 L 38 132 Q 38 142 50 142 L 140 132 Q 150 132 150 120 L 142 26 Q 142 16 130 16 L 50 16 Q 38 16 38 24"/>
+      <circle id="map-dot" cx="38" cy="24" r="5"/>
+    </svg>
+  </aside>
+
+  <div class="direction" aria-hidden="true"><b id="direction-arrow">↓</b><span id="direction-label">DOWN</span></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
