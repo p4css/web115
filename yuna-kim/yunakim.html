@@ -289,16 +289,52 @@
     .phase-card p { margin: 0; color: #52656c; line-height: 1.8; }
 
     #story-footer {
-      min-height: 68vh;
+      position: relative;
+      isolation: isolate;
+      min-height: 100svh;
       display: grid;
       align-content: space-between;
       padding: clamp(4rem, 8vw, 8rem) 6vw 3rem;
       background: #040d12;
       border-top: 1px solid rgba(101, 203, 229, .18);
+      overflow: hidden;
     }
-    .footer-quote { max-width: 1000px; margin: 0; font: italic 600 clamp(2.5rem, 6.5vw, 7rem)/1.04 "Playfair Display", serif; letter-spacing: -.035em; }
+    #story-footer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(4, 13, 18, .82) 0%, rgba(4, 13, 18, .26) 62%, rgba(4, 13, 18, .58) 100%),
+        linear-gradient(0deg, rgba(4, 13, 18, .94) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .footer-ascii-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      opacity: .68;
+      pointer-events: none;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 88%, transparent 100%);
+    }
+    .footer-ascii-source { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .footer-ascii-label {
+      position: absolute;
+      z-index: 2;
+      top: clamp(2rem, 5vw, 4rem);
+      right: 6vw;
+      margin: 0;
+      color: rgba(145, 205, 218, .68);
+      font: 700 .62rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+    .footer-quote { position: relative; z-index: 2; max-width: 1000px; margin: 0; font: italic 600 clamp(2.5rem, 6.5vw, 7rem)/1.04 "Playfair Display", serif; letter-spacing: -.035em; text-shadow: 0 3px 30px #040d12; }
     .footer-quote em { color: var(--blue); }
-    .footer-meta { display: flex; justify-content: space-between; gap: 2rem; padding-top: 5rem; color: var(--muted); font-size: .76rem; line-height: 1.7; }
+    .footer-meta { position: relative; z-index: 2; display: flex; justify-content: space-between; gap: 2rem; padding-top: 5rem; color: var(--muted); font-size: .76rem; line-height: 1.7; }
 
     @media (max-width: 760px) {
       .hero-copy h1 em, .hero-deck { margin-left: 0; }
@@ -319,6 +355,8 @@
       .anatomy-heading { grid-template-columns: 1fr; gap: 2rem; }
       .phase-grid { grid-template-columns: 1fr; }
       .footer-meta { flex-direction: column; }
+      .footer-ascii-canvas { opacity: .56; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+      .footer-ascii-label { display: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -466,6 +504,12 @@
   </main>
 
   <footer id="story-footer">
+    <canvas id="footer-ascii-canvas" class="footer-ascii-canvas" aria-hidden="true"></canvas>
+    <video id="footer-ascii-source" class="footer-ascii-source" muted loop playsinline preload="metadata" aria-hidden="true">
+      <source src="outputs/yuna_kim_1m49-1m54_white.webm" type="video/webm">
+      <source src="outputs/yuna_kim_1m49-1m54_white.mp4" type="video/mp4">
+    </video>
+    <p class="footer-ascii-label" aria-hidden="true">Live ASCII · Canvas study</p>
     <p class="footer-quote">“Great skating makes effort look like <em>flight.</em>”</p>
     <div class="footer-meta">
       <span>YUNA KIM · 2010 VANCOUVER FREE SKATE<br>Analysis segment: 01:49—01:54</span>
@@ -489,6 +533,110 @@
       let videoDuration = 5;
       let sequenceDistance = 0;
       let ticking = false;
+
+      const storyFooter = document.querySelector('#story-footer');
+      const asciiCanvas = document.querySelector('#footer-ascii-canvas');
+      const asciiVideo = document.querySelector('#footer-ascii-source');
+      const asciiContext = asciiCanvas.getContext('2d', { alpha: true });
+      const asciiSample = document.createElement('canvas');
+      const asciiSampleContext = asciiSample.getContext('2d', { willReadFrequently: true });
+      const asciiGlyphs = '·:+*xX#@';
+      let asciiVisible = false;
+      let asciiAnimationFrame = 0;
+      let asciiLastPaint = 0;
+
+      function sizeAsciiCanvas() {
+        const bounds = storyFooter.getBoundingClientRect();
+        const density = Math.min(devicePixelRatio || 1, 1.5);
+        asciiCanvas.width = Math.max(1, Math.round(bounds.width * density));
+        asciiCanvas.height = Math.max(1, Math.round(bounds.height * density));
+      }
+
+      function drawAsciiFrame(now = 0) {
+        if (!asciiVisible && !reduceMotion) return;
+        if (!reduceMotion && now - asciiLastPaint < 80) {
+          asciiAnimationFrame = requestAnimationFrame(drawAsciiFrame);
+          return;
+        }
+        asciiLastPaint = now;
+
+        if (asciiVideo.readyState >= 2 && asciiVideo.videoWidth) {
+          const cellWidth = Math.max(8, Math.round(asciiCanvas.width / 150));
+          const cellHeight = Math.round(cellWidth * 1.45);
+          const columns = Math.max(1, Math.ceil(asciiCanvas.width / cellWidth));
+          const rows = Math.max(1, Math.ceil(asciiCanvas.height / cellHeight));
+          asciiSample.width = columns;
+          asciiSample.height = rows;
+
+          const zoom = innerWidth < 760 ? 2.7 : 2.35;
+          const sourceWidth = asciiVideo.videoWidth / zoom;
+          const sourceHeight = asciiVideo.videoHeight / zoom;
+          const sourceX = (asciiVideo.videoWidth - sourceWidth) / 2;
+          const sourceY = (asciiVideo.videoHeight - sourceHeight) / 2;
+          asciiSampleContext.drawImage(asciiVideo, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, columns, rows);
+
+          try {
+            const pixels = asciiSampleContext.getImageData(0, 0, columns, rows).data;
+            asciiContext.clearRect(0, 0, asciiCanvas.width, asciiCanvas.height);
+            asciiContext.font = `700 ${Math.round(cellHeight * .86)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+            asciiContext.textAlign = 'center';
+            asciiContext.textBaseline = 'middle';
+
+            for (let row = 0; row < rows; row += 1) {
+              for (let column = 0; column < columns; column += 1) {
+                const offset = (row * columns + column) * 4;
+                const red = pixels[offset];
+                const green = pixels[offset + 1];
+                const blue = pixels[offset + 2];
+                const luminance = red * .2126 + green * .7152 + blue * .0722;
+                const chroma = Math.max(red, green, blue) - Math.min(red, green, blue);
+                if (luminance > 238 && chroma < 22) continue;
+
+                const strength = Math.min(1, Math.max(.08, (245 - luminance + chroma * .3) / 190));
+                const glyph = asciiGlyphs[Math.min(asciiGlyphs.length - 1, Math.floor(strength * asciiGlyphs.length))];
+                const alpha = .2 + strength * .72;
+                asciiContext.fillStyle = `rgba(101, 203, 229, ${alpha})`;
+                asciiContext.fillText(glyph, column * cellWidth + cellWidth / 2, row * cellHeight + cellHeight / 2);
+              }
+            }
+          } catch {
+            asciiVisible = false;
+            asciiVideo.pause();
+          }
+        }
+
+        if (!reduceMotion && asciiVisible) asciiAnimationFrame = requestAnimationFrame(drawAsciiFrame);
+      }
+
+      function startAscii() {
+        asciiVisible = true;
+        if (reduceMotion) {
+          asciiVideo.currentTime = .8;
+          asciiVideo.addEventListener('seeked', () => drawAsciiFrame(), { once: true });
+          return;
+        }
+        asciiVideo.play().catch(() => {});
+        cancelAnimationFrame(asciiAnimationFrame);
+        asciiAnimationFrame = requestAnimationFrame(drawAsciiFrame);
+      }
+
+      function stopAscii() {
+        asciiVisible = false;
+        asciiVideo.pause();
+        cancelAnimationFrame(asciiAnimationFrame);
+      }
+
+      const footerObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) startAscii();
+        else stopAscii();
+      }, { threshold: .05 });
+
+      new ResizeObserver(() => {
+        sizeAsciiCanvas();
+        if (reduceMotion && asciiVisible) drawAsciiFrame();
+      }).observe(storyFooter);
+      footerObserver.observe(storyFooter);
+      sizeAsciiCanvas();
 
       scrubVideo.addEventListener('loadedmetadata', () => {
         videoDuration = Number.isFinite(scrubVideo.duration) ? scrubVideo.duration : 5;
